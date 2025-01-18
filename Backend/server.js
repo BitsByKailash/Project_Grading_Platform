@@ -5,9 +5,12 @@ const path = require("path");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const path = require('path');
 
 const app = express();
+
+app.use(express.json()); // Parses incoming JSON requests
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data
+
 const port = 3000;
 
 // PostgreSQL connection pool
@@ -15,17 +18,17 @@ const pool = new Pool({
   user: "postgres",
   host: "localhost",
   database: "grading_platform",
-  password: "HareKrishnaHareKrishna123!", // Replace with your password
+  password: "HareKrishnaHareKrishna123!", 
   port: 5432,
 });
 
 // Admin registers new user
 app.post('/register',async (req,res) => {
   const {username, passwrd, usertype } = req.body;
-  const hashedPassword = await bcrypt.hash(passwrd, 10);
+  
   try {
-    await client.querry(
-      'INSERT INTO users (username, passwrd, usertype) VALUES ($1, $2, $3)', [username,hashedPassword,usertype]
+    const result = await client.querry(
+      'INSERT INTO users (username, passwrd, usertype) VALUES ($1, $2, $3)', [username,passwrd,usertype]
     );
     res.status(201).send("User registered successfully.")
   } catch (err) {
@@ -75,24 +78,23 @@ app.post("/api/students", async (req, res) => {
   }
 });
 
-app.post('/login', async (req,res) => {
-  const { username, passwrd } = req.body;
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const result = await client.querry('SELECT * FROM users WHERE username = $1',[username]);
-    const user = result.rows[0];
-    if (!user) return res.status(401).send("Invalid credentials.");
+      const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+      const user = result.rows[0];
 
-    const match = await bcrypt.compare(passwrd,user.passwrd);
-    if (!match) return res.status(401).send("Invalid credentials.");
+      if (!user || user.passwrd !== password) {
+          return res.status(401).json({ message: 'Invalid username or password' });
+      }
 
-    const token = jwt.sign({id: user.id, usertype: user.usertype }, 'your_secret_key');
-    res.json({token });
+      res.status(200).json({ message: 'Login successful', usertype: user.usertype });
   } catch (err) {
-
-    res.status(500).send("Error logging in.");
+      console.error('Error during login:', err);
+      res.status(500).json({ message: 'Internal server error' });
   }
-
 });
+
 
 app.post('/upload', authenticateToken,upload.single('assignment'), async (req,res) => {
   if (req.user.role !== 'student') return res.status(403).send("Only students can upload assignments.");
@@ -163,6 +165,26 @@ app.post('/admin/create-user',authenticateToken, async (req,res) => {
     res.status(500).send("Error creating user.");
   }
 });
+
+app.get('/dashboard',(req,res) => {
+  res.sendFile(path.join(__dirname,'dashboard.html'));
+});
+app.get('/upload',(req,res) => {
+  res.sendFile(path.join(__dirname,'upload.html'));
+});
+app.get('/grade',(req,res) => {
+  res.sendFile(path.join(__dirname,'grade.html'));
+});
+app.get('/admin',(req,res) => {
+  res.sendFile(path.join(__dirname,'admin.html'));
+});
+app.get('/grades',(req,res) => {
+  res.sendFile(path.join(__dirname,'grades.html'));
+});
+// app.get('/dashboard',(req,res) => {
+//   res.sendFile(path.join(__dirname,'dashboard.html'));
+// });
+
 
 app.listen(port, () => {
   console.log("Server running on http://localhost:${port}");

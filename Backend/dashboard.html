@@ -1,0 +1,28 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard  Grading Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Grading Platform</h1>
+        <button id="logoutButton">Logout</button>
+    </nav>
+    <div class="dashboard-container">
+        <div id="roleMessage">
+
+        </div>
+        <div id="actions">
+            <button onclick=""><a href="http://localhost:3000/admin/create-user"> Create User</a></button>
+            <button onclick=""><a href="http://localhost:3000/admin//verify-grade/:id">Verify Grades</a></button>
+            <button onclick=""><a href="http://localhost:3000/admin/grade"> Grade Assignments</a></button>
+            <button onclick=""><a href="http://localhost:3000/admin/grades"> View grades</a></button>
+            <button onclick=""><a href="http://localhost:3000/admin/upload"> Upload Assignments</a></button>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html> 
