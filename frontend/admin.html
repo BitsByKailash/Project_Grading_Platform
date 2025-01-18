@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Grading Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Grading Platform - Admin Panel</h1>
+        <button>Logout</button>
+    </nav>
+    <div class="admin-container">
+        <h2>Create New User</h2>
+        <form id="createUserForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter Username" required>
+            <label for="password">Password</label>
+            <input type="text" id="password" placeholder="Enter password" required>
+            <label for="usertype">User Type</label>
+            <select id="usertype" required>
+                <option value="student">Student</option> 
+                <option value="ta">Teaching Assistant</option>
+                <option value="teacher">Teacher</option>
+                <option value="admin">Administrator</option>
+            </select>
+            <button type="submit">Create User</button>
+        </form>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

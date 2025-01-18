@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Assignments | Grading Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Grading Platform</h1>
+        <button id="logoutButton">Logout</button>
+    </nav>
+    <div class="grade-container">
+        <h2>Grade Assignments</h2>
+        <form id="grade Form">
+            <label for="student">Student Name</label>
+            <select id="student" required></select>
+            <label for="grade">Grade</label>
+            <input type="text" id="grade" placeholder="Enter grade" required>
+            <label for=feedback">Feedback</label>
+            <textarea id="feedback" placeholder="Write feedback here"></textarea>
+            <button type="submit">Submit Grade</button>
+        </form>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
