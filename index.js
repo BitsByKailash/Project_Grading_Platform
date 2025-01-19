@@ -175,6 +175,25 @@ const upload = multer({ dest: 'uploads/' }); // uploads directory is where stude
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+function verifyRole (requiredRole) {
+  return async (req, res, next) => {
+    const user = req.session.user;
+    if (!user) {
+      res.redirect('/login');
+    }
+    try {
+      const result = await pool.querry('SELECT * FROM users WHERE id = $1 AND usertype = $2',[user.username,requiredRole]);
+      if (result.rows.length === 0) {
+        return res.status(403).send('Access denied');
+      }
+      next();
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Database error');
+    }
+  };
+}
+
 // Authentication middleware (session-based)
 function authenticateSession(req, res, next) {
   if (!req.session.user) {
@@ -233,32 +252,35 @@ app.get('/auth', (req, res) => {
 
 
 // Dashboard Route
-app.get('/dashboard', authenticateSession, (req, res) => {
+app.get('/dashboard',  (req, res) => {
   // res.sendFile(path.join(__dirname, 'dashboard.html'));
   if (!req.session.user) {
-    return res.status(401).json({error: 'Unauthorized access'});
+    return res.redirect('/login');
   }
-  res.json({message: 'Welcome to your dashboard', user: req.session.user});
+  if (res.session && req.session.user) {
+    res.json({ role: req.session.user.usertype});
+  }
+  // res.sendFile(path.join(__dirname, 'public/dashboard.html'));
 });
 
 // Grade Assignment Route
-app.get('/assignGrades', authenticateSession, (req, res) => {
+app.get('/grade', verifyRole(['ta','teacher','administrator']), (req, res) => {
   res.sendFile(path.join(__dirname, 'grade.html'));
 });
 
 // View Grades Route
-app.get('/viewGrades', authenticateSession, (req, res) => {
-  res.sendFile(path.join(__dirname, 'grades.html'));
+app.get('/grades', verifyRole(['student','ta','teacher','administrator']), (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/grades.html'));
 });
 
 // Verify Grades Route
-app.get('/verifyGrades', authenticateSession, (req, res) => {
-  res.sendFile(path.join(__dirname, 'grade.html'));
+app.get('/upload', verifyRole(['student','administrator']), (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/upload.html'));
 });
 
 // Admin Route
-app.get('/admin', authenticateSession, (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+app.get('/admin', verifyRole(['administrator']), (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 // Logout Route
@@ -276,3 +298,4 @@ app.post('/logout', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
