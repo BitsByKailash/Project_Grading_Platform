@@ -274,6 +274,9 @@ button#logoutButton {
         padding-right:10px;
         min-width:100px;
     }
+    .card {
+        flex: 0 0 100%;
+    }
 }
 
 .dashboard, .login-container {
@@ -302,3 +305,5 @@ button#logoutButton {
 .dashboard button:hover {
     background-color: #357ab8;
 }
+
+

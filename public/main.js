@@ -120,19 +120,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function attachEventListeners() {
-            console.log('Attaching event listeners ...');
-            gradesBtn?.addEventListener('click', () => {
-                window.location.href = 'public/grades';
-            });
-            gradeBtn?.addEventListener('click', () => {
-                window.location.href = 'public/grade';
-            });
-            uploadBtn?.addEventListener('click', () => {
-                window.location.href = 'public/upload';
-            });
-            adminBtn?.addEventListener('click', () => {
-                window.location.href = 'public/admin';
-            });
+            // console.log('Attaching event listeners ...');
+            // gradesBtn?.addEventListener('click', () => {
+            //     window.location.href = 'public/grades';
+            // });
+            // gradeBtn?.addEventListener('click', () => {
+            //     window.location.href = 'public/grade';
+            // });
+            // uploadBtn?.addEventListener('click', () => {
+            //     window.location.href = 'public/upload';
+            // });
+            // adminBtn?.addEventListener('click', () => {
+            //     window.location.href = 'public/admin';
+            // });
         }
 
         async function setUpDashboard() {
